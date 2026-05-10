@@ -1,0 +1,156 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.browser {
+  width: $sidebar-width;
+  min-width: $sidebar-width;
+  background: $surface-dark;
+  border-left: 1px solid rgba($wall-blue, 0.15);
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  @include custom-scrollbar;
+}
+
+.sectionTitle {
+  @include retro-text(8px, $text-muted);
+  letter-spacing: 2px;
+}
+
+// ─── Empty State ────────────────────────────────────────────────────
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px 16px;
+  text-align: center;
+}
+
+.emptyIcon {
+  font-size: 32px;
+  opacity: 0.3;
+}
+
+.emptyText {
+  @include retro-text(9px, $text-muted);
+}
+
+.emptyHint {
+  @include retro-text(7px, $text-muted);
+  opacity: 0.5;
+}
+
+// ─── Level List ─────────────────────────────────────────────────────
+
+.levelList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.levelCard {
+  @include glass-card;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: all 0.15s ease;
+
+  &:hover {
+    border-color: rgba($wall-blue, 0.3);
+  }
+
+  &.active {
+    border-color: rgba($pac-yellow, 0.4);
+    @include neon-glow($pac-yellow, 3px);
+  }
+}
+
+.levelInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.levelName {
+  @include retro-text(8px, $text-white);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 140px;
+}
+
+.levelDate {
+  @include retro-text(6px, $text-muted);
+}
+
+// ─── Mini Preview ───────────────────────────────────────────────────
+
+.miniPreview {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  background: $bg-black;
+  border-radius: 2px;
+  padding: 2px;
+  overflow: hidden;
+}
+
+.miniRow {
+  display: flex;
+  gap: 0;
+}
+
+.miniTile {
+  width: 3px;
+  height: 3px;
+  flex-shrink: 0;
+}
+
+// ─── Level Actions ──────────────────────────────────────────────────
+
+.levelActions {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.loadBtn,
+.playBtn,
+.deleteBtn {
+  @include retro-text(10px, $text-white);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: $border-radius-sm;
+  background: rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+}
+
+.loadBtn:hover {
+  border-color: rgba($wall-blue, 0.5);
+  color: $ghost-cyan;
+}
+
+.playBtn:hover {
+  border-color: rgba($neon-green, 0.5);
+  color: $neon-green;
+}
+
+.deleteBtn:hover {
+  border-color: rgba($danger-red, 0.5);
+  color: $danger-red;
+}

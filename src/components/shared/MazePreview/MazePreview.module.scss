@@ -1,0 +1,18 @@
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.row {
+  display: flex;
+  gap: 0;
+}
+
+.tile {
+  width: 3px;
+  height: 3px;
+  flex-shrink: 0;
+}

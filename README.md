@@ -1,73 +1,154 @@
-# React + TypeScript + Vite
+<p align="center">
+  <img src="src/assets/hero.png" alt="PAC-MAN — Classic Arcade" width="480" />
+</p>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<h1 align="center">🟡 PAC-MAN — Classic Arcade</h1>
 
-Currently, two official plugins are available:
+<p align="center">
+  A faithful recreation of the iconic arcade game, built from scratch with <strong>React</strong>, <strong>TypeScript</strong> and the <strong>HTML Canvas API</strong>.<br/>
+  Features authentic ghost AI, multiple maze campaigns, a built-in level editor, and synthesised retro audio.
+</p>
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+<p align="center">
+  <img src="https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white" alt="React 19" />
+  <img src="https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white" alt="Vite" />
+  <img src="https://img.shields.io/badge/Sass-SCSS_Modules-CC6699?logo=sass&logoColor=white" alt="Sass" />
+  <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License" />
+</p>
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## ✨ Features
 
-## Expanding the ESLint configuration
+| Feature | Description |
+|---|---|
+| **Classic Gameplay** | Dots, power pellets, fruit bonuses, extra lives at 10 000 pts, and escalating difficulty across levels |
+| **Authentic Ghost AI** | Each ghost (Blinky, Pinky, Inky, Clyde) uses its own chase strategy, plus scatter, frightened and eaten modes |
+| **5-Level Campaign** | _Classic → The Grid → The Chambers → The Gauntlet → The Fortress_ — each with unique mazes, wall colours, faster ghosts and shorter power-pellet durations |
+| **Level Editor** | Paint walls, dots, pellets and ghost houses on a 28×31 grid · Undo/Redo · Save/load custom levels to `localStorage` |
+| **Custom Level Browser** | Play, rename or delete your creations from a dedicated level select screen |
+| **Retro Sound FX** | All audio synthesised at runtime via the **Web Audio API** — no external sound files |
+| **Keyboard Controls** | Arrow keys **or** WASD, plus keyboard-navigable menus |
+| **Responsive Canvas** | 2× scaled pixel art rendered to a sharp `<canvas>` element |
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🎮 Controls
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+| Action | Keys |
+|---|---|
+| Move | `↑` `↓` `←` `→` **or** `W` `A` `S` `D` |
+| Navigate menus | `↑` `↓` to select · `Enter` to confirm |
+| Pause _(in-game)_ | `Esc` |
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## 👻 Ghost AI
+
+The four ghosts follow the original arcade targeting rules:
+
+| Ghost | Colour | Chase Strategy |
+|---|---|---|
+| **Blinky** | Red | Targets Pac-Man's current tile directly |
+| **Pinky** | Pink | Targets 4 tiles ahead of Pac-Man |
+| **Inky** | Cyan | Uses Blinky's position to calculate a reflected target 2 tiles ahead of Pac-Man |
+| **Clyde** | Orange | Chases Pac-Man when far away (> 8 tiles), retreats to scatter corner when close |
+
+Ghosts cycle through **Scatter → Chase** waves on a timer, reverse direction on mode transitions, and enter **Frightened** mode when Pac-Man eats a power pellet.
+
+---
+
+## 🏗️ Project Structure
+
+```
+src/
+├── engine/              # Pure game logic (no React)
+│   ├── types.ts         # All type definitions & enums
+│   ├── constants.ts     # Grid, speed, timing & scoring config
+│   ├── maze.ts          # Maze utilities & classic maze data
+│   ├── mazeRenderer.ts  # Canvas maze drawing
+│   ├── pacman.ts        # Pac-Man movement & animation
+│   ├── ghost.ts         # Ghost AI, targeting & movement
+│   ├── ghostRenderer.ts # Canvas ghost drawing
+│   ├── collision.ts     # Pac-Man / ghost / dot collision handling
+│   ├── levels.ts        # Campaign level configs & maze data
+│   ├── updateGame.ts    # Main game-state update loop
+│   ├── renderGame.ts    # Top-level render orchestrator
+│   └── audio.ts         # Web Audio synthesiser
+├── components/
+│   ├── App/             # Root component & game state machine
+│   ├── GameCanvas/      # Canvas wrapper & game loop hook
+│   ├── HUD/             # Score, lives & level display
+│   ├── StartScreen/     # Animated title screen with ghost parade
+│   ├── GameOverScreen/  # Game over overlay
+│   ├── LevelEditor/     # Editor canvas, tool palette & level browser
+│   └── shared/          # Reusable UI primitives
+├── hooks/
+│   ├── useGameLoop.ts   # requestAnimationFrame loop
+│   ├── useKeyboardInput.ts
+│   ├── useToastMessage.ts
+│   └── useUndoRedo.ts   # Editor undo/redo stack
+├── utils/
+│   └── levelStorage.ts  # localStorage CRUD for custom levels
+└── styles/
+    ├── global.scss
+    ├── _variables.scss
+    ├── _mixins.scss
+    └── _animations.scss
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🚀 Getting Started
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) **v18+**
+- npm (bundled with Node)
+
+### Install & Run
+
+```bash
+# Clone the repo
+git clone https://github.com/Dekrayzis/pacman-game.git
+cd pacman-game
+
+# Install dependencies
+npm install
+
+# Start the dev server
+npm run dev
 ```
+
+Open **http://localhost:5173** in your browser.
+
+### Build for Production
+
+```bash
+npm run build
+npm run preview   # preview the production build locally
+```
+
+---
+
+## 🛠️ Tech Stack
+
+- **React 19** — UI components & state management
+- **TypeScript 6** — type-safe game engine & components
+- **Vite 8** — blazing-fast dev server & bundler
+- **Sass (SCSS Modules)** — scoped, modular styling with shared variables & mixins
+- **HTML Canvas API** — pixel-perfect 2D rendering at 60 fps
+- **Web Audio API** — runtime-synthesised retro sound effects
+
+---
+
+## 📝 License
+
+This project is released under the [MIT License](LICENSE).
+
+---
+
+<p align="center">
+  <em>Waka waka waka waka 🟡</em>
+</p>

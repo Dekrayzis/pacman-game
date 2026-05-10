@@ -1,0 +1,45 @@
+// ─── Pac-Man Color Palette ──────────────────────────────────────────
+$pac-yellow: #FFFF00;
+$ghost-red: #FF0000;
+$ghost-pink: #FFB8FF;
+$ghost-cyan: #00FFFF;
+$ghost-orange: #FFB852;
+$ghost-frightened: #2121FF;
+$wall-blue: #2121DE;
+$wall-blue-glow: rgba(33, 33, 222, 0.6);
+$dot-color: #FCB5A2;
+$bg-black: #000000;
+$bg-dark: #0a0a0a;
+$surface-dark: #111111;
+$surface-card: #1a1a2e;
+$text-white: #FFFFFF;
+$text-muted: #888899;
+$hud-yellow: #FFFF00;
+$neon-green: #00FF41;
+$neon-purple: #B026FF;
+$danger-red: #FF4444;
+$success-green: #44FF44;
+
+// ─── Typography ─────────────────────────────────────────────────────
+$font-arcade: 'Press Start 2P', 'Courier New', monospace;
+$font-system: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+
+// ─── Sizes ──────────────────────────────────────────────────────────
+$tile-size: 32px;
+$hud-height: 48px;
+$sidebar-width: 260px;
+$border-radius-sm: 4px;
+$border-radius-md: 8px;
+$border-radius-lg: 16px;
+
+// ─── Breakpoints ────────────────────────────────────────────────────
+$bp-mobile: 480px;
+$bp-tablet: 768px;
+$bp-desktop: 1024px;
+$bp-wide: 1400px;
+
+// ─── Z-Index ────────────────────────────────────────────────────────
+$z-canvas: 1;
+$z-hud: 10;
+$z-overlay: 50;
+$z-modal: 100;

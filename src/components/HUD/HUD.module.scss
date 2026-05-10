@@ -1,0 +1,49 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 896px;
+  padding: 8px 16px;
+  gap: 16px;
+  z-index: $z-hud;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.label {
+  @include retro-text(7px, $text-muted);
+  letter-spacing: 1px;
+}
+
+.value {
+  @include retro-text(14px, $text-white);
+}
+
+.highScoreValue {
+  @include retro-text(14px, $pac-yellow);
+  @include text-glow($pac-yellow, 4px);
+}
+
+.levelValue {
+  @include retro-text(14px, $ghost-cyan);
+  @include text-glow($ghost-cyan, 4px);
+}
+
+.lives {
+  display: flex;
+  gap: 4px;
+}
+
+.lifeIcon {
+  @include retro-text(16px, $pac-yellow);
+  @include text-glow($pac-yellow, 4px);
+}

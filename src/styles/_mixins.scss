@@ -1,0 +1,144 @@
+@use 'sass:math';
+@use 'variables' as *;
+
+// ─── Retro arcade text ──────────────────────────────────────────────
+@mixin retro-text($size: 14px, $color: $text-white) {
+  font-family: $font-arcade;
+  font-size: $size;
+  color: $color;
+  letter-spacing: 1px;
+  text-shadow: 0 0 6px rgba($color, 0.5);
+}
+
+// ─── Neon glow effect ───────────────────────────────────────────────
+@mixin neon-glow($color, $intensity: 8px) {
+  box-shadow:
+    0 0 $intensity rgba($color, 0.4),
+    0 0 ($intensity * 2) rgba($color, 0.2),
+    inset 0 0 math.div($intensity, 2) rgba($color, 0.1);
+}
+
+@mixin text-glow($color, $intensity: 6px) {
+  text-shadow:
+    0 0 $intensity rgba($color, 0.6),
+    0 0 ($intensity * 2) rgba($color, 0.3);
+}
+
+// ─── CRT scanline overlay ───────────────────────────────────────────
+@mixin scanlines {
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.1) 0px,
+      transparent 1px,
+      transparent 3px
+    );
+    z-index: $z-overlay;
+    opacity: 0.3;
+  }
+}
+
+// ─── Responsive canvas centering ────────────────────────────────────
+@mixin responsive-canvas {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 100vw;
+  max-height: 100vh;
+
+  canvas {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+}
+
+// ─── Glass card ─────────────────────────────────────────────────────
+@mixin glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: $border-radius-lg;
+  backdrop-filter: blur(12px);
+}
+
+// ─── Button ─────────────────────────────────────────────────────────
+@mixin arcade-button($color: $pac-yellow) {
+  @include retro-text(10px, $color);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border: 2px solid $color;
+  border-radius: $border-radius-sm;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+
+  // Expanding border rings on hover/focus
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border: 2px solid $color;
+    border-radius: inherit;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &:hover,
+  &:focus {
+    background: rgba($color, 0.15);
+    transform: translateY(-1px);
+
+    &::before {
+      animation: borderExpand 1.4s ease-out infinite;
+    }
+
+    &::after {
+      animation: borderExpand 1.4s ease-out 0.7s infinite;
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  @at-root {
+    @keyframes borderExpand {
+      0% {
+        inset: -2px;
+        opacity: 0.8;
+      }
+      80% {
+        inset: -10px;
+        opacity: 0;
+      }
+      100% {
+        inset: -10px;
+        opacity: 0;
+      }
+    }
+  }
+}
+
+// ─── Scrollbar ──────────────────────────────────────────────────────
+@mixin custom-scrollbar($thumb: $wall-blue, $track: $surface-dark) {
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: $track;
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $thumb;
+    border-radius: 3px;
+  }
+}

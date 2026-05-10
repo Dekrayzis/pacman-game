@@ -1,0 +1,142 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.editor {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: $bg-black;
+  outline: none;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+// ─── Header ─────────────────────────────────────────────────────────
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: $surface-dark;
+  border-bottom: 1px solid rgba($wall-blue, 0.2);
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.backButton {
+  @include arcade-button($text-muted);
+  font-size: 8px;
+  padding: 6px 12px;
+  border-color: rgba($text-muted, 0.3);
+}
+
+.titleArea {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.levelNameInput {
+  @include retro-text(14px, $pac-yellow);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid rgba($pac-yellow, 0.3);
+  text-align: center;
+  padding: 4px 8px;
+  width: 250px;
+  transition: border-color 0.2s;
+
+  &:focus {
+    outline: none;
+    border-bottom-color: $pac-yellow;
+  }
+
+  &::placeholder {
+    color: $text-muted;
+    opacity: 0.5;
+  }
+}
+
+.headerActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.actionButton {
+  @include retro-text(16px, $text-white);
+  background: rgba($wall-blue, 0.15);
+  border: 1px solid rgba($wall-blue, 0.3);
+  border-radius: $border-radius-sm;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover:not(:disabled) {
+    background: rgba($wall-blue, 0.3);
+    @include neon-glow($wall-blue, 4px);
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+}
+
+.saveButton {
+  @include arcade-button($neon-green);
+  font-size: 9px;
+  padding: 6px 14px;
+}
+
+.playButton {
+  @include arcade-button($pac-yellow);
+  font-size: 9px;
+  padding: 6px 14px;
+}
+
+// ─── Toast ──────────────────────────────────────────────────────────
+
+.toast {
+  position: fixed;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  @include retro-text(9px, $text-white);
+  padding: 10px 20px;
+  border-radius: $border-radius-md;
+  z-index: $z-modal;
+  animation: slideUp 0.3s ease-out;
+
+  &.success {
+    background: rgba($neon-green, 0.2);
+    border: 1px solid rgba($neon-green, 0.4);
+    color: $neon-green;
+  }
+
+  &.error {
+    background: rgba($danger-red, 0.2);
+    border: 1px solid rgba($danger-red, 0.4);
+    color: $danger-red;
+  }
+
+  &.info {
+    background: rgba($wall-blue, 0.2);
+    border: 1px solid rgba($wall-blue, 0.4);
+    color: $ghost-cyan;
+  }
+}
+
+// ─── Body ───────────────────────────────────────────────────────────
+
+.body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}

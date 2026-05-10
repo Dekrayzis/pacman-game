@@ -1,0 +1,21 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.canvasWrapper {
+  @include responsive-canvas;
+  position: relative;
+}
+
+.canvas {
+  border: 2px solid rgba($wall-blue, 0.4);
+  border-radius: $border-radius-sm;
+  box-shadow:
+    0 0 20px rgba($wall-blue, 0.2),
+    0 0 60px rgba($wall-blue, 0.1),
+    inset 0 0 20px rgba(0, 0, 0, 0.5);
+
+  // Scale the canvas to fit viewport
+  max-width: calc(100vw - 40px);
+  max-height: calc(100vh - 120px);
+  object-fit: contain;
+}
