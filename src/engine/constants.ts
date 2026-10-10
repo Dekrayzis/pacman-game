@@ -10,13 +10,17 @@ export const MAZE_HEIGHT = 31;
 export const CANVAS_WIDTH = MAZE_WIDTH * DISPLAY_TILE;
 export const CANVAS_HEIGHT = MAZE_HEIGHT * DISPLAY_TILE;
 
-// ─── Speed (pixels per frame at 60fps) ──────────────────────────────
+// ─── Speed (display pixels per 60 Hz step) ─────────────────────────
+// Matched to the arcade's level 1 in tiles per second. The arcade moves
+// Pac-Man at 80% of 75.76 px/s on 8 px tiles, about 7.6 tiles a second;
+// tiles here are 32 display pixels, so that's about 4 per step. Ghosts run
+// at 75% (3.6), frightened ghosts at 50% (2), and eyes heading home fast.
 
-export const BASE_PACMAN_SPEED = 2;
-export const BASE_GHOST_SPEED = 1.8;
-export const FRIGHTENED_GHOST_SPEED = 1.0;
-export const EATEN_GHOST_SPEED = 4;
-export const TUNNEL_SPEED = 1.0;
+export const BASE_PACMAN_SPEED = 4;
+export const BASE_GHOST_SPEED = 3.6;
+export const FRIGHTENED_GHOST_SPEED = 2;
+export const EATEN_GHOST_SPEED = 8;
+export const TUNNEL_SPEED = 2;
 
 // ─── Timing (in frames at 60fps) ────────────────────────────────────
 

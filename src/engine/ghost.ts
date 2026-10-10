@@ -189,10 +189,14 @@ export function updateGhost(
       const doorX = tileCenterX(GHOST_HOUSE_CENTER.col);
       const doorY = tileCenterY(GHOST_HOUSE_CENTER.row - 3);
 
-      if (Math.abs(ghost.position.x - doorX) > 2) {
-        ghost.position.x += ghost.position.x < doorX ? ghost.speed : -ghost.speed;
-      } else if (Math.abs(ghost.position.y - doorY) > 2) {
-        ghost.position.y -= ghost.speed;
+      // Each step goes no further than the door, so a fast ghost can't step
+      // past it and keep going.
+      const toDoorX = doorX - ghost.position.x;
+      const toDoorY = doorY - ghost.position.y;
+      if (Math.abs(toDoorX) > 2) {
+        ghost.position.x += Math.sign(toDoorX) * Math.min(ghost.speed, Math.abs(toDoorX));
+      } else if (Math.abs(toDoorY) > 2) {
+        ghost.position.y += Math.sign(toDoorY) * Math.min(ghost.speed, Math.abs(toDoorY));
       } else {
         ghost.isInHouse = false;
         ghost.position.x = doorX;
