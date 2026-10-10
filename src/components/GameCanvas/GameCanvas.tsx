@@ -104,37 +104,40 @@ export default function GameCanvas({
   // Keyboard input
   useKeyboardInput(gameStateRef);
 
-  // Game loop
-  const gameLoop = useCallback(() => {
+  // Game loop: run the steps that are due (see useGameLoop), then draw once.
+  const gameLoop = useCallback((steps: number) => {
     const state = gameStateRef.current;
     const canvas = canvasRef.current;
-    if (!state || !canvas) return;
+    if (!state || !canvas || steps === 0) return;
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-
-    frameCountRef.current++;
 
     // Get the current level's maze (for respawning)
     const config = levelConfigRef.current;
     const levelMaze = config?.maze ?? customMaze!;
 
-    // Update
-    const result = updateGameState(state, levelMaze, playSound, config ?? undefined);
+    let scoreChanged = false;
+    for (let i = 0; i < steps; i++) {
+      frameCountRef.current++;
+      const result = updateGameState(state, levelMaze, playSound, config ?? undefined);
 
-    if (result.gameOver) {
-      saveHighScore(state.highScore);
-      onGameOver(state.score, state.highScore);
-      setIsRunning(false);
-      return;
+      if (result.gameOver) {
+        saveHighScore(state.highScore);
+        onGameOver(state.score, state.highScore);
+        setIsRunning(false);
+        return;
+      }
+
+      if (result.levelComplete) {
+        initGame(state.level + 1, state.score, state.lives);
+        return;
+      }
+
+      scoreChanged ||= result.scoreChanged;
     }
 
-    if (result.levelComplete) {
-      initGame(state.level + 1, state.score, state.lives);
-      return;
-    }
-
-    if (result.scoreChanged) {
+    if (scoreChanged) {
       onScoreChange(state.score, state.highScore, state.lives, state.level);
     }
 

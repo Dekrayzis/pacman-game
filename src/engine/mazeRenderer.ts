@@ -103,6 +103,32 @@ function renderWall(
   ctx.shadowBlur = 0;
 }
 
+// ─── Wall layer cache ────────────────────────────────────────────────
+// Walls never change during a level, and their glow (shadowBlur) is the
+// most expensive thing on screen. So they're drawn once per maze and colour
+// onto an off-screen canvas, and each frame copies that in one drawImage.
+
+const wallLayers = new WeakMap<number[][], { color: string; canvas: HTMLCanvasElement }>();
+
+function getWallLayer(maze: number[][], wallColor: string, tileSize: number): HTMLCanvasElement {
+  const cached = wallLayers.get(maze);
+  if (cached && cached.color === wallColor) return cached.canvas;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = (maze[0]?.length ?? 0) * tileSize;
+  canvas.height = maze.length * tileSize;
+  const ctx = canvas.getContext('2d')!;
+  for (let row = 0; row < maze.length; row++) {
+    for (let col = 0; col < maze[row].length; col++) {
+      if (maze[row][col] === TileType.WALL) {
+        renderWall(ctx, maze, col, row, col * tileSize, row * tileSize, tileSize, wallColor);
+      }
+    }
+  }
+  wallLayers.set(maze, { color: wallColor, canvas });
+  return canvas;
+}
+
 // ─── Tile renderers (object literal replaces switch) ─────────────────
 
 interface TileRenderParams {
@@ -117,10 +143,8 @@ interface TileRenderParams {
   powerPelletVisible: boolean;
 }
 
+// Walls aren't here: they come from the cached layer (getWallLayer).
 const TILE_RENDERERS: Partial<Record<TileType, (p: TileRenderParams) => void>> = {
-  [TileType.WALL]: (p) =>
-    renderWall(p.ctx, p.maze, p.col, p.row, p.x, p.y, p.tileSize, p.wallColor),
-
   [TileType.DOT]: ({ ctx, x, y, tileSize }) => {
     ctx.fillStyle = '#FCB5A2';
     ctx.beginPath();
@@ -151,6 +175,8 @@ export function renderMaze(
   wallColor: string = '#2121DE',
 ): void {
   const tileSize = DISPLAY_TILE;
+
+  ctx.drawImage(getWallLayer(maze, wallColor, tileSize), 0, 0);
 
   for (let row = 0; row < maze.length; row++) {
     for (let col = 0; col < maze[row].length; col++) {
