@@ -37,7 +37,7 @@ const MAZE_2: number[][] = [
   [W,W,W,W,W,W,D,W,W,E,W,H,H,H,H,H,H,W,E,W,W,D,W,W,W,W,W,W], // 15
   [E,E,E,E,E,W,D,W,W,E,W,W,W,W,W,W,W,W,E,W,W,D,W,E,E,E,E,E], // 16
   [E,E,E,E,E,W,D,W,W,E,E,E,E,E,E,E,E,E,E,W,W,D,W,E,E,E,E,E], // 17
-  [E,E,E,E,E,W,D,W,W,E,W,W,W,W,W,W,W,W,E,W,W,D,W,E,E,E,E,E], // 18
+  [W,W,W,W,W,W,D,W,W,E,W,W,W,W,W,W,W,W,E,W,W,D,W,W,W,W,W,W], // 18
   [W,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,W], // 19
   [W,D,W,W,D,W,W,W,D,W,W,W,D,W,W,D,W,W,W,D,W,W,W,D,W,W,D,W], // 20
   [W,D,W,W,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,W,W,D,W], // 21
@@ -73,7 +73,7 @@ const MAZE_3: number[][] = [
   [W,W,W,W,W,W,D,W,W,E,W,H,H,H,H,H,H,W,E,W,W,D,W,W,W,W,W,W], // 15
   [E,E,E,E,E,W,D,W,W,E,W,W,W,W,W,W,W,W,E,W,W,D,W,E,E,E,E,E], // 16
   [E,E,E,E,E,W,D,W,W,E,E,E,E,E,E,E,E,E,E,W,W,D,W,E,E,E,E,E], // 17
-  [E,E,E,E,E,W,D,W,W,E,W,W,W,W,W,W,W,W,E,W,W,D,W,E,E,E,E,E], // 18
+  [W,W,W,W,W,W,D,W,W,E,W,W,W,W,W,W,W,W,E,W,W,D,W,W,W,W,W,W], // 18
   [W,D,D,D,D,D,D,D,D,D,D,D,D,W,W,D,D,D,D,D,D,D,D,D,D,D,D,W], // 19
   [W,D,W,W,D,W,W,D,W,W,D,W,D,W,W,D,W,D,W,W,D,W,W,D,W,W,D,W], // 20
   [W,D,D,D,D,D,D,D,D,D,D,W,D,D,D,D,W,D,D,D,D,D,D,D,D,D,D,W], // 21
@@ -109,7 +109,7 @@ const MAZE_4: number[][] = [
   [W,W,W,W,W,W,D,W,W,E,W,H,H,H,H,H,H,W,E,W,W,D,W,W,W,W,W,W], // 15
   [E,E,E,E,E,W,D,W,W,E,W,W,W,W,W,W,W,W,E,W,W,D,W,E,E,E,E,E], // 16
   [E,E,E,E,E,W,D,W,W,E,E,E,E,E,E,E,E,E,E,W,W,D,W,E,E,E,E,E], // 17
-  [E,E,E,E,E,W,D,W,W,E,W,W,W,W,W,W,W,W,E,W,W,D,W,E,E,E,E,E], // 18
+  [W,W,W,W,W,W,D,W,W,E,W,W,W,W,W,W,W,W,E,W,W,D,W,W,W,W,W,W], // 18
   [W,D,D,D,D,D,D,D,D,D,D,D,D,W,W,D,D,D,D,D,D,D,D,D,D,D,D,W], // 19
   [W,D,W,W,W,W,D,W,W,W,W,W,D,W,W,D,W,W,W,W,W,D,W,W,W,W,D,W], // 20
   [W,D,D,D,D,W,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,D,W,D,D,D,D,W], // 21
@@ -145,7 +145,7 @@ const MAZE_5: number[][] = [
   [W,W,W,W,W,W,D,W,W,E,W,H,H,H,H,H,H,W,E,W,W,D,W,W,W,W,W,W], // 15
   [E,E,E,E,E,W,D,W,W,E,W,W,W,W,W,W,W,W,E,W,W,D,W,E,E,E,E,E], // 16
   [E,E,E,E,E,W,D,W,W,E,E,E,E,E,E,E,E,E,E,W,W,D,W,E,E,E,E,E], // 17
-  [E,E,E,E,E,W,D,W,W,E,W,W,W,W,W,W,W,W,E,W,W,D,W,E,E,E,E,E], // 18
+  [W,W,W,W,W,W,D,W,W,E,W,W,W,W,W,W,W,W,E,W,W,D,W,W,W,W,W,W], // 18
   [W,D,D,D,D,D,D,D,D,D,D,D,D,W,W,D,D,D,D,D,D,D,D,D,D,D,D,W], // 19
   [W,D,W,W,W,W,D,W,D,W,W,W,D,W,W,D,W,W,W,D,W,D,W,W,W,W,D,W], // 20
   [W,P,D,D,D,D,D,W,D,D,D,D,D,D,D,D,D,D,D,D,W,D,D,D,D,D,P,W], // 21
