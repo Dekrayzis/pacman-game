@@ -6,7 +6,7 @@ import {
   MOUTH_SPEED,
   DEATH_ANIMATION_DURATION,
 } from './constants';
-import { isWalkable, getDirectionDelta, tileCenterX, tileCenterY } from './maze';
+import { isWalkable, getDirectionDelta, getOppositeDirection, tileCenterX, tileCenterY } from './maze';
 
 // ─── Create initial Pacman state ─────────────────────────────────────
 
@@ -105,7 +105,10 @@ export function updatePacman(pacman: PacmanState, maze: number[][]): void {
 
     // Try queued direction change
     let turned = false;
-    if (pacman.nextDirection !== Direction.NONE && pacman.nextDirection !== pacman.direction) {
+    // Off the side of the maze (in a tunnel) there's nowhere to turn but back.
+    const offMaze = nextTileCol < 0 || nextTileCol >= MAZE_WIDTH;
+    const canTurn = !offMaze || pacman.nextDirection === getOppositeDirection(pacman.direction);
+    if (canTurn && pacman.nextDirection !== Direction.NONE && pacman.nextDirection !== pacman.direction) {
       const turnDelta = getDirectionDelta(pacman.nextDirection);
       const turnCol = nextTileCol + turnDelta.col;
       const turnRow = nextTileRow + turnDelta.row;

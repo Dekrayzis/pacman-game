@@ -5,7 +5,6 @@ import {
 import type { GameState } from './types';
 import {
   BASE_PACMAN_SPEED,
-  BASE_GHOST_SPEED,
   READY_DURATION,
   LEVEL_COMPLETE_DURATION,
   FRIGHTENED_DURATION,
@@ -88,7 +87,8 @@ function handlePlayingPhase(
 
   // Update ghosts
   const blinky = ghosts[0];
-  ghosts.forEach(ghost => updateGhost(ghost, maze, pacman, blinky));
+  const ghostSpeedMult = levelConfig?.ghostSpeedMultiplier ?? 1;
+  ghosts.forEach(ghost => updateGhost(ghost, maze, pacman, blinky, ghostSpeedMult));
 
   // Check collisions (pass level-specific frightened duration)
   const frightenedDur = levelConfig?.frightenedDuration ?? FRIGHTENED_DURATION;
@@ -140,11 +140,10 @@ function handleDyingPhase(
 
   // Respawn with level-appropriate speeds
   const pacmanMult = levelConfig?.pacmanSpeedMultiplier ?? 1;
-  const ghostMult = levelConfig?.ghostSpeedMultiplier ?? 1;
   const spawn = findPacmanSpawn(initialMaze);
   state.pacman = createPacman(spawn, BASE_PACMAN_SPEED * pacmanMult);
+  // Ghost speeds (level multiplier included) are set each step by updateGhost.
   state.ghosts = createAllGhosts();
-  state.ghosts.forEach(g => { g.speed = BASE_GHOST_SPEED * ghostMult; });
   state.phase = GamePhase.READY;
   state.readyTimer = READY_DURATION;
   state.frightenedTimeLeft = 0;

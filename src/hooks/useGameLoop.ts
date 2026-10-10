@@ -33,7 +33,15 @@ export function useGameLoop(
     pendingRef.current += Math.min(timestamp - lastTimeRef.current, MAX_CATCH_UP_MS);
     lastTimeRef.current = timestamp;
 
-    const steps = Math.floor(pendingRef.current / STEP_MS);
+    // Round rather than floor: a step is due once at least half of it has
+    // built up, and the remainder may go up to half a step negative. Flooring
+    // left the remainder sitting right on a step boundary on a 60 Hz screen
+    // (the first frame adds nothing, then each frame adds a whole step), so
+    // the slightest rAF jitter alternated 0 and 2 steps: a visible hitch.
+    // Rounding keeps the remainder centred, half a step clear of either
+    // boundary. The remainder stays bounded, so the long-run rate is still
+    // exactly 60 steps a second on any screen (120 Hz, 144 Hz...).
+    const steps = Math.max(0, Math.round(pendingRef.current / STEP_MS));
     pendingRef.current -= steps * STEP_MS;
     callbackRef.current(steps);
 

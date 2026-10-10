@@ -11,7 +11,6 @@ import {
   CANVAS_WIDTH,
   CANVAS_HEIGHT,
   BASE_PACMAN_SPEED,
-  BASE_GHOST_SPEED,
   INITIAL_LIVES,
   READY_DURATION,
   FRUIT_SPAWN,
@@ -58,7 +57,6 @@ export default function GameCanvas({
     gameMaze[spawn.row][spawn.col] = TileType.EMPTY;
 
     const totalDots = countDots(gameMaze);
-    const speedMult = config?.ghostSpeedMultiplier ?? 1;
     const pacmanMult = config?.pacmanSpeedMultiplier ?? 1;
 
     levelConfigRef.current = config;
@@ -76,6 +74,7 @@ export default function GameCanvas({
       readyTimer: READY_DURATION,
       maze: gameMaze,
       pacman: createPacman(spawn, BASE_PACMAN_SPEED * pacmanMult),
+      // Ghost speeds, with the level's multiplier, are set each step by updateGhost.
       ghosts: createAllGhosts(),
       fruitActive: false,
       fruitTimer: 0,
@@ -85,11 +84,6 @@ export default function GameCanvas({
       modeIndex: 0,
       globalMode: GhostMode.SCATTER,
     };
-
-    // Apply ghost speed multiplier
-    state.ghosts.forEach(g => {
-      g.speed = BASE_GHOST_SPEED * speedMult;
-    });
 
     gameStateRef.current = state;
     onScoreChange(state.score, state.highScore, state.lives, state.level);

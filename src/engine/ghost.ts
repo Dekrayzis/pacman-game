@@ -18,6 +18,7 @@ import {
   BASE_GHOST_SPEED,
   FRIGHTENED_GHOST_SPEED,
   EATEN_GHOST_SPEED,
+  TUNNEL_SPEED,
   DISPLAY_TILE,
 } from './constants';
 import { getDirectionDelta, getOppositeDirection, getTile, tileCenterX, tileCenterY } from './maze';
@@ -111,8 +112,18 @@ function distanceSq(a: TilePosition, b: TilePosition): number {
   return (a.col - b.col) ** 2 + (a.row - b.row) ** 2;
 }
 
+/** Off the side of the maze: the stretch a tunnel wraps through. */
+function isOffMaze(col: number): boolean {
+  return col < 0 || col >= MAZE_WIDTH;
+}
+
 function isGhostWalkable(maze: number[][], col: number, row: number, ghost: GhostState): boolean {
-  if (row < 0 || row >= maze.length || col < 0 || col >= MAZE_WIDTH) return false;
+  if (row < 0 || row >= maze.length) return false;
+  // Like Pac-Man, a ghost may step off the side of the maze and wrap round,
+  // but only through a tunnel: from a TUNNEL tile at the edge of the row.
+  if (isOffMaze(col)) {
+    return getTile(maze, col < 0 ? 0 : MAZE_WIDTH - 1, row) === TileType.TUNNEL;
+  }
   const tile = getTile(maze, col, row);
   if (tile === TileType.WALL) return false;
   if (tile === TileType.GHOST_HOUSE && !ghost.isInHouse && ghost.mode !== GhostMode.EATEN) return false;
@@ -124,6 +135,12 @@ function chooseDirection(
   target: TilePosition,
   maze: number[][]
 ): Direction {
+  // Off the side of the maze a ghost is inside a tunnel: it keeps going until
+  // it has wrapped back in, so it can't turn off into the void.
+  if (isOffMaze(ghost.tilePos.col) && ghost.direction !== Direction.NONE) {
+    return ghost.direction;
+  }
+
   const opposite = getOppositeDirection(ghost.direction);
   const candidates: Direction[] = [Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT];
 
@@ -174,14 +191,54 @@ const GHOST_SPEED_BY_MODE: Record<GhostMode, number> = {
   [GhostMode.CHASE]: BASE_GHOST_SPEED,
 };
 
+/**
+ * In a tunnel, as in the arcade: off the side of the maze, or in a row that
+ * opens onto a tunnel tile at the edge, on the walled-in stretch between that
+ * edge and the first tile with an opening above or below.
+ */
+function isInTunnel(maze: number[][], col: number, row: number): boolean {
+  if (isOffMaze(col)) return true;
+  const isWalled = (c: number) =>
+    getTile(maze, c, row - 1) === TileType.WALL && getTile(maze, c, row + 1) === TileType.WALL;
+
+  if (getTile(maze, 0, row) === TileType.TUNNEL) {
+    let c = 0;
+    while (c < MAZE_WIDTH && isWalled(c)) c++;
+    if (col < c) return true;
+  }
+  if (getTile(maze, MAZE_WIDTH - 1, row) === TileType.TUNNEL) {
+    let c = MAZE_WIDTH - 1;
+    while (c >= 0 && isWalled(c)) c--;
+    if (col > c) return true;
+  }
+  return false;
+}
+
+function getGhostSpeed(ghost: GhostState, maze: number[][], speedMultiplier: number): number {
+  const modeSpeed = GHOST_SPEED_BY_MODE[ghost.mode];
+  // Eyes heading home aren't slowed by the tunnel.
+  if (!ghost.isInHouse && ghost.mode !== GhostMode.EATEN
+    && isInTunnel(maze, ghost.tilePos.col, ghost.tilePos.row)) {
+    return Math.min(modeSpeed, TUNNEL_SPEED) * speedMultiplier;
+  }
+  return modeSpeed * speedMultiplier;
+}
+
 // ─── Update ghost ────────────────────────────────────────────────────
 
+/**
+ * One 60 Hz step for a ghost. `speedMultiplier` is the level's ghost speed
+ * multiplier, applied on top of the mode's (and the tunnel's) speed.
+ */
 export function updateGhost(
   ghost: GhostState,
   maze: number[][],
   pacman: PacmanState,
-  blinky: GhostState
+  blinky: GhostState,
+  speedMultiplier: number = 1
 ): void {
+  ghost.speed = getGhostSpeed(ghost, maze, speedMultiplier);
+
   // Handle ghost house
   if (ghost.isInHouse) {
     if (ghost.dotCounter === -1) {
@@ -216,9 +273,6 @@ export function updateGhost(
     }
     return;
   }
-
-  // Set speed based on mode
-  ghost.speed = GHOST_SPEED_BY_MODE[ghost.mode];
 
   // Check if arrived at ghost house when eaten
   if (ghost.mode === GhostMode.EATEN) {
@@ -278,13 +332,14 @@ export function updateGhost(
   // tilePos is only updated in the crossedCenter block above
   // (do NOT recalculate from pixels, or we'll skip wall checks)
 
-  // Tunnel wrap
+  // Tunnel wrap, as for Pac-Man: past the centre of the off-maze tile on one
+  // side, reappear at the centre of the off-maze tile on the other.
   if (ghost.position.x < -DISPLAY_TILE / 2) {
-    ghost.tilePos.col = MAZE_WIDTH - 1;
-    ghost.position.x = tileCenterX(ghost.tilePos.col);
+    ghost.position.x = MAZE_WIDTH * DISPLAY_TILE + DISPLAY_TILE / 2;
+    ghost.tilePos.col = MAZE_WIDTH;
   } else if (ghost.position.x > MAZE_WIDTH * DISPLAY_TILE + DISPLAY_TILE / 2) {
-    ghost.tilePos.col = 0;
-    ghost.position.x = tileCenterX(0);
+    ghost.position.x = -DISPLAY_TILE / 2;
+    ghost.tilePos.col = -1;
   }
 }
 
